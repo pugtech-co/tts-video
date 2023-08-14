@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 jupyter = "*"
 tts = {editable = true, path = "/Users/tindelllockett/projects/TTS"}
+moviepy = "*"
+opencv-python = "*"
 
 [requires]
 python_version = "3.11"
