@@ -1,0 +1,11 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+jupyter = "*"
+tts = {editable = true, path = "/Users/tindelllockett/projects/TTS"}
+
+[requires]
+python_version = "3.11"
