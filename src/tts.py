@@ -4,6 +4,9 @@ from IPython.display import Audio
 import numpy as np
 
 class TextToSpeech:
+    SAMPLE_RATE = 22050
+    MAGIC_NUMBER = 86 # This is the number of timestamps per second.  I don't know where it comes from. I calculated it by trial and error.
+
     synthesizer = None
     AudioOutput = namedtuple("AudioOutput", ["audio", "pre_tokenized_text", "phoneme_timestamps", "total_running_time_s", "word_timestamps", "space_indices"])
 
@@ -33,8 +36,7 @@ class TextToSpeech:
             
             final_audio.append(output[0])
             phonemes_before_sentence = len(final_phoneme_timestamps)
-            magic_number = 86 # what is this?
-            final_phoneme_timestamps.extend([timestamp + total_running_time_s * magic_number for timestamp in phoneme_timestamps])
+            final_phoneme_timestamps.extend([timestamp + total_running_time_s * TextToSpeech.MAGIC_NUMBER for timestamp in phoneme_timestamps])
 
             final_pre_tokenized_text.extend(pre_tokenized_text)
             
@@ -43,7 +45,7 @@ class TextToSpeech:
             final_space_indices.extend(space_indices)
 
 
-            running_time = len(output[0]) / 22050.
+            running_time = len(output[0]) / TextToSpeech.SAMPLE_RATE
             total_running_time_s += running_time
             if(plt):
                 plt.figure()
@@ -99,12 +101,12 @@ class TextToSpeech:
 
     @staticmethod
     def add_beeps(audio_output):
-        beep = np.sin(2 * np.pi * 1000 * np.arange(0, 0.1, 1/22050))
+        beep = np.sin(2 * np.pi * 1000 * np.arange(0, 0.1, 1/TextToSpeech.SAMPLE_RATE))
         # Get the audio samples
         audio_samples = np.array(audio_output.audio)
 
         # Convert the word start timestamps to sample indices using the space indices
-        word_sample_indices = [int(audio_output.phoneme_timestamps[idx] / 86. * 22050) for idx in audio_output.space_indices]
+        word_sample_indices = [int(audio_output.phoneme_timestamps[idx] / 86. * TextToSpeech.SAMPLE_RATE) for idx in audio_output.space_indices]
 
         # Insert the beep at each word start
         for start_sample in word_sample_indices:
