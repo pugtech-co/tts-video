@@ -8,6 +8,7 @@ jupyter = "*"
 tts = {editable = true, path = "/Users/tindelllockett/projects/TTS"}
 moviepy = "*"
 opencv-python = "*"
+scipy = "*"
 
 [requires]
 python_version = "3.11"
