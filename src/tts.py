@@ -6,7 +6,6 @@ from src.tts_output import TTSOutput
 
 class TextToSpeech:
     SAMPLE_RATE = 22050
-    MAGIC_NUMBER = 86 # This is the number of timestamps per second.  I don't know where it comes from. I calculated it by trial and error.
 
     synthesizer = None
 
