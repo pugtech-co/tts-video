@@ -9,8 +9,11 @@ class BaseVideoComponent:
         self.frame_count = int(fps * duration)  # Total number of frames for this component
         self.current_frame = 0  # Current frame counter
 
+        print("Component: " + str(self.start_frame) + " - " + str(self.start_frame + self.frame_count))
+        print("Duration: " + str(self.duration))
+
+    # Remember to modify the frame in place.
     def apply(self, frame):
-        # Method to be overridden by specific components
         pass
 
     def is_active(self):
