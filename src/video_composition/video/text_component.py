@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from src.video_composition.video_componenet import BaseVideoComponent
+from src.video_composition.video.video_componenet import BaseVideoComponent
 
 
 class TextComponent(BaseVideoComponent):

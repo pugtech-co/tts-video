@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from src.video_composition.video_componenet import BaseVideoComponent
+from src.video_composition.video.video_componenet import BaseVideoComponent
 
 class TimedTextComponent(BaseVideoComponent):
     def __init__(self, words, timestamps, font=50, font_scale=2, font_thickness=2, color=(0, 0, 0), fps=30, *args, **kwargs):

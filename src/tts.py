@@ -20,7 +20,7 @@ class TextToSpeech:
         )
     
     @staticmethod
-    def text_to_audio(text, plt=None, speaker_name="p225"):
+    def text_to_audio(text, plt=None, speaker_name="p225", speed=1.0):
         sentences = text.split('. ')
         final_audio = []
         final_pre_tokenized_text = []
@@ -32,6 +32,12 @@ class TextToSpeech:
         
         for sentence in sentences:
             output = TextToSpeech.synthesizer.tts(text=sentence, speaker_name=speaker_name, return_extra_outputs=True)
+            
+            if(speed != 1.0):
+                new_durations = output[1]['outputs']['durations'].clone() / speed
+                output = TextToSpeech.synthesizer.tts(text=sentence,speaker_name="p227",return_extra_outputs=True,durations=new_durations[0])
+
+
             pre_tokenized_text, phoneme_timestamps = TextToSpeech.get_phoneme_durations_and_timestamps(sentence, output)
             
             final_audio.append(output[0])
