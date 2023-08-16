@@ -13,8 +13,6 @@ class VideoCreator:
     # This is the number of timestamps per second.  I don't know where it comes from. I calculated it by trial and error.
     TIMESTAMP_UNITS_PER_SECOND = 86 
     
-    AudioOutput = namedtuple("AudioOutput", ["audio", "pre_tokenized_text", "phoneme_timestamps", "total_running_time_s", "word_timestamps", "space_indices"])
-
     VIDEO_CODEC = 'mp4v'
 
     @staticmethod

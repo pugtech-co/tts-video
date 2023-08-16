@@ -2,13 +2,13 @@ from collections import namedtuple
 from TTS.utils.synthesizer import Synthesizer
 from IPython.display import Audio
 import numpy as np
+from src.tts_output import TTSOutput
 
 class TextToSpeech:
     SAMPLE_RATE = 22050
     MAGIC_NUMBER = 86 # This is the number of timestamps per second.  I don't know where it comes from. I calculated it by trial and error.
 
     synthesizer = None
-    AudioOutput = namedtuple("AudioOutput", ["audio", "pre_tokenized_text", "phoneme_timestamps", "total_running_time_s", "word_timestamps", "space_indices"])
 
     @staticmethod
     def initialize_synthesizer(tts_path, tts_config_path, speakers_file_path):
@@ -22,14 +22,8 @@ class TextToSpeech:
     @staticmethod
     def text_to_audio(text, plt=None, speaker_name="p225", speed=1.0):
         sentences = text.split('. ')
-        final_audio = []
-        final_pre_tokenized_text = []
-        final_phoneme_timestamps = []
-        total_running_time_s = 0
+        combined_output = None
 
-        final_word_timestamps = []
-        final_space_indices = []
-        
         for sentence in sentences:
             output = TextToSpeech.synthesizer.tts(text=sentence, speaker_name=speaker_name, return_extra_outputs=True)
             
@@ -37,51 +31,19 @@ class TextToSpeech:
                 new_durations = output[1]['outputs']['durations'].clone() / speed
                 output = TextToSpeech.synthesizer.tts(text=sentence,speaker_name="p227",return_extra_outputs=True,durations=new_durations[0])
 
+            sentence_output = TTSOutput.from_output(output, sentence, TextToSpeech.synthesizer)
 
-            pre_tokenized_text, phoneme_timestamps = TextToSpeech.get_phoneme_durations_and_timestamps(sentence, output)
-            
-            final_audio.append(output[0])
-            phonemes_before_sentence = len(final_phoneme_timestamps)
-            final_phoneme_timestamps.extend([timestamp + total_running_time_s * TextToSpeech.MAGIC_NUMBER for timestamp in phoneme_timestamps])
-
-            final_pre_tokenized_text.extend(pre_tokenized_text)
-            
-            space_indices_for_sentence = [0] + [i + 1 for i, phoneme in enumerate(pre_tokenized_text) if phoneme == ' ']
-            space_indices = [index + phonemes_before_sentence for index in space_indices_for_sentence]
-            final_space_indices.extend(space_indices)
-
-
-            running_time = len(output[0]) / TextToSpeech.SAMPLE_RATE
-            total_running_time_s += running_time
             if(plt):
                 plt.figure()
+                TextToSpeech.plot_spectrogram_with_words(plt, TextToSpeech.add_beeps(sentence_output))
 
-                audio_output_for_sentence = TextToSpeech.AudioOutput(
-                    audio=np.array(output[0]), 
-                    pre_tokenized_text=pre_tokenized_text, 
-                    phoneme_timestamps=phoneme_timestamps, 
-                    total_running_time_s=running_time, 
-                    word_timestamps=[float(phoneme_timestamps[space_idx]) for space_idx in space_indices_for_sentence], 
-                    space_indices=space_indices_for_sentence)
+            if combined_output is None:
+                combined_output = sentence_output
+            else:
+                combined_output = combined_output.combine_with(sentence_output)
 
-                TextToSpeech.plot_spectrogram_with_words(plt, TextToSpeech.add_beeps(audio_output_for_sentence))
+        return combined_output
 
-
-        # final_space_indices = [0] + [i for i, phoneme in enumerate(final_pre_tokenized_text) if phoneme == ' ']
-        final_word_timestamps = [float(final_phoneme_timestamps[space_idx]) for space_idx in final_space_indices]
-
-        return TextToSpeech.AudioOutput(audio=np.concatenate(final_audio), pre_tokenized_text=final_pre_tokenized_text, phoneme_timestamps=final_phoneme_timestamps, total_running_time_s=total_running_time_s, word_timestamps=final_word_timestamps, space_indices=final_space_indices)
-
-
-    @staticmethod
-    def get_phoneme_durations_and_timestamps(text, output):
-        tokens = TextToSpeech.synthesizer.tts_model.tokenizer.text_to_ids(text)
-        pre_tokenized_text_blnk = [TextToSpeech.synthesizer.tts_model.tokenizer.decode([y]) for y in tokens]
-        pre_tokenized_text = [x if x != '<BLNK>' else '_' for x in pre_tokenized_text_blnk]
-        phoneme_durations = output[1]['outputs']['durations'].cpu().data.numpy()
-        phoneme_timestamps = np.cumsum(phoneme_durations)
-        return pre_tokenized_text, phoneme_timestamps
-    
     @staticmethod
     def plot_spectrogram_with_words(plt, audio_output):
         spec = TextToSpeech.synthesizer.tts_model.ap.melspectrogram(audio_output.audio)
@@ -108,13 +70,11 @@ class TextToSpeech:
     @staticmethod
     def add_beeps(audio_output):
         beep = np.sin(2 * np.pi * 1000 * np.arange(0, 0.1, 1/TextToSpeech.SAMPLE_RATE))
-        # Get the audio samples
+
         audio_samples = np.array(audio_output.audio)
 
-        # Convert the word start timestamps to sample indices using the space indices
-        word_sample_indices = [int(audio_output.phoneme_timestamps[idx] / 86. * TextToSpeech.SAMPLE_RATE) for idx in audio_output.space_indices]
+        word_sample_indices = [int(audio_output.phoneme_timestamps[idx] / 86. * TextToSpeech.SAMPLE_RATE) for idx in audio_output.word_indices]
 
-        # Insert the beep at each word start
         for start_sample in word_sample_indices:
             end_sample = start_sample + len(beep)
             if end_sample > len(audio_samples):
@@ -122,8 +82,7 @@ class TextToSpeech:
                 beep = beep[:end_sample - start_sample]  # Truncate beep if necessary
             audio_samples[start_sample:end_sample] += beep
 
-        # Replace the audio in the AudioOutput tuple
-        return TextToSpeech.AudioOutput(audio=audio_samples, pre_tokenized_text=audio_output.pre_tokenized_text, phoneme_timestamps=audio_output.phoneme_timestamps, total_running_time_s=audio_output.total_running_time_s, word_timestamps=audio_output.word_timestamps, space_indices=audio_output.space_indices)
+        return TTSOutput(audio=audio_samples, pre_tokenized_text=audio_output.pre_tokenized_text, phoneme_timestamps=audio_output.phoneme_timestamps, total_running_time_s=audio_output.total_running_time_s, word_timestamps=audio_output.word_timestamps, word_indices=audio_output.word_indices)
 
 # Paths and Parameters
 tts_path = "/Users/tindelllockett/Library/Application Support/tts/tts_models--en--vctk--vits/model_file.pth"

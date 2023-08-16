@@ -3,7 +3,7 @@ import cv2
 import soundfile as sf
 import tempfile
 import subprocess
-from src.video_composition.componenet_container import ComponentContainer
+from src.video_composition.combo.componenet_container import ComponentContainer
 
 class VideoComposition(ComponentContainer):
     VIDEO_CODEC = 'mp4v'
