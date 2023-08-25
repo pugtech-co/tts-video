@@ -34,7 +34,7 @@ class VideoCreator:
         out.release()
 
     @staticmethod
-    def create_sentence_video(sentence, word_timestamps, audio_samples, background_image_path, output_file='sentence.mp4', fps=DEFAULT_FPS, audio_rate=SAMPLE_RATE):
+    def create_sentence_video(sentence, word_timestamps, audio_samples, background_image_path, output_file='output/sentence.mp4', fps=DEFAULT_FPS, audio_rate=SAMPLE_RATE):
         with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as temp_video_file, tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as temp_word_file, tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_audio_file:
             background_image = VideoCreator._read_background_image(background_image_path)
             out = VideoCreator._create_video_writer(background_image, temp_video_file.name, fps)

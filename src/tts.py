@@ -2,6 +2,7 @@ from collections import namedtuple
 from TTS.utils.synthesizer import Synthesizer
 from IPython.display import Audio
 import numpy as np
+import re
 from src.tts_output import TTSOutput
 
 class TextToSpeech:
@@ -20,7 +21,7 @@ class TextToSpeech:
     
     @staticmethod
     def text_to_audio(text, plt=None, speaker_name="p225", speed=1.0):
-        sentences = text.split('. ')
+        sentences = re.split('([.!?]) ', text)
         combined_output = None
 
         for sentence in sentences:
