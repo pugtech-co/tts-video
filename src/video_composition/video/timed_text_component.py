@@ -12,6 +12,7 @@ class TimedTextComponent(BaseVideoComponent):
         self.font_thickness = font_thickness
         self.color = color
         self.current_word_idx = 0
+        
 
     def apply(self, frame):
         # Check if it's time to move to the next word
