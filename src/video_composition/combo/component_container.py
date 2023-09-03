@@ -33,4 +33,4 @@ class ComponentContainer:
         return max(max_video, max_audio)
 
     def total_frames(self):
-        return max([component.start_time * self.fps + component.frame_count for component in self.video_components],default=0)
+        return int(max([component.start_time * self.fps + component.frame_count for component in self.video_components],default=0))
