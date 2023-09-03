@@ -34,6 +34,7 @@ class TTSOutput:
         word_timestamps, word_indices = TTSOutput.get_word_timestamps_and_indices(pre_tokenized_text, phoneme_timestamps)
 
         return TTSOutput(audio, pre_tokenized_text, phoneme_timestamps, running_time, word_timestamps, word_indices)
+   
     @staticmethod
     def get_phoneme_durations_and_timestamps(text, output, synthesizer):
         tokens = synthesizer.tts_model.tokenizer.text_to_ids(text)

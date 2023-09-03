@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from src.video_composition.video.video_componenet import BaseVideoComponent
+from src.video_composition.video.video_component import BaseVideoComponent
 import random
 
 class PanImageComponent(BaseVideoComponent):

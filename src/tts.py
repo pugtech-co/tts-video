@@ -21,7 +21,12 @@ class TextToSpeech:
     
     @staticmethod
     def text_to_audio(text, plt=None, speaker_name="p225", speed=1.0):
-        sentences = re.split('([.!?]) ', text)
+        sum_sp = 0
+        sum_wi = 0
+        sentences = re.split(r'(?<=[.!?]) ', text)  # Split after punctuation followed by a space
+        # trim each sentence 
+        sentences = [sentence.strip() for sentence in sentences]
+
         combined_output = None
 
         for sentence in sentences:
@@ -34,8 +39,18 @@ class TextToSpeech:
             sentence_output = TTSOutput.from_output(output, sentence, TextToSpeech.synthesizer)
 
             if(plt):
-                plt.figure()
-                TextToSpeech.plot_spectrogram_with_words(plt, TextToSpeech.add_beeps(sentence_output))
+                print(" ---- ")
+                print( "sentence: " + sentence)
+                sp = str(len(TextToSpeech.custom_split(sentence, len(sentence_output.word_indices))))
+                wi = str(len(sentence_output.word_indices))
+                sum_sp += int(sp)
+                sum_wi += int(wi)
+                print("split: " + sp + " word indices: " + wi)
+                print("sum split: " + str(sum_sp) + " sum word indices: " + str(sum_wi))
+                if(sp != wi):
+                    print("split: " + sp + " word indices: " + wi)
+                    plt.figure()
+                    TextToSpeech.plot_spectrogram_with_words(plt, TextToSpeech.add_beeps(sentence_output))
 
             if combined_output is None:
                 combined_output = sentence_output
@@ -43,6 +58,37 @@ class TextToSpeech:
                 combined_output = combined_output.combine_with(sentence_output)
 
         return combined_output
+
+    @staticmethod
+    def custom_split(text, expected_word_count=-1):
+        words = re.split('[ -]', text)
+        if len(words) == expected_word_count:
+            return words
+
+        common_fused_words = [
+            'to be', 
+            'for the', 
+            'of the',
+            'as the', 
+            'for an', 
+            'have been', 
+            "I shall", 
+            "in the", 
+            "of events"]
+        common_fused_words_regex = [r'\b' + re.escape(word) + r'\b' for word in common_fused_words]
+
+        for i, fused in enumerate(common_fused_words):
+            regex_pattern = common_fused_words_regex[i]
+            replacement_pattern = fused.replace(' ', '_')
+            text = re.sub(regex_pattern, replacement_pattern, text)
+
+        words = text.split(' ')
+
+        words = [word.replace('_', ' ') for word in words]
+        
+        return words
+
+
 
     @staticmethod
     def plot_spectrogram_with_words(plt, audio_output):

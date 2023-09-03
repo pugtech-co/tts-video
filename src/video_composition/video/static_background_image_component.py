@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from src.video_composition.video.video_componenet import BaseVideoComponent
+from src.video_composition.video.video_component import BaseVideoComponent
 
 class StaticBackgroundImageComponent(BaseVideoComponent):
     def __init__(self, background_image_path, width, height, fps, start_time, duration):

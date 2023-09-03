@@ -3,13 +3,13 @@ import cv2
 import soundfile as sf
 import tempfile
 import subprocess
-from src.video_composition.combo.componenet_container import ComponentContainer
+from src.video_composition.combo.component_container import ComponentContainer
 
 class VideoComposition(ComponentContainer):
     VIDEO_CODEC = 'mp4v'
 
-    def __init__(self, width, height, fps, audio_rate=22050):
-        super().__init__()
+    def __init__(self, width, height, fps=30, audio_rate=22050, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.width = width
         self.height = height
         self.fps = fps

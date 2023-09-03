@@ -1,4 +1,4 @@
-from src.video_composition.video.effects.effect_componenet import BaseEffectComponent
+from src.video_composition.video.effects.effect_component import BaseEffectComponent
 import cv2
 
 class StaticImageEffect(BaseEffectComponent):
