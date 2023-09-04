@@ -1,4 +1,3 @@
-[Jolene](notebooks/output/jolene.mp4)
 # Installation
 ## Requirements
 - Pipenv
@@ -20,3 +19,5 @@ see [src.tts](src/tts.py)
 see [src.video_composition.combo.tts_component](src/video_composition/combo/tts_component.py)
 ## Adding videos, background, and audio together
 see [notebooks.lyrics](notebooks/lyrics.ipynb)
+
+https://github.com/pugtech-co/tts-video/assets/7929237/1a0383b1-3022-4a3c-a14b-afb58f40d23a
