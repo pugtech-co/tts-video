@@ -6,8 +6,12 @@ from src.video_composition.video.video_component import BaseVideoComponent
 
 class VideoFromMP4Component(BaseVideoComponent):
     def __init__(self, mp4_path, start=0, width=1080, height=1920, fps=30):
-        with tempfile.NamedTemporaryFile(suffix='.avi') as temp_video_file:
-            subprocess.call(['ffmpeg', '-y', '-i', mp4_path, '-vcodec', 'rawvideo', '-pix_fmt', 'bgr24', temp_video_file.name])
+        with tempfile.NamedTemporaryFile(suffix='.avi', delete=True) as temp_video_file:
+            try:
+                subprocess.call(['ffmpeg', '-y', '-i', mp4_path, '-vcodec', 'libx264', '-pix_fmt', 'bgr24', temp_video_file.name])
+            except Exception as e:
+                print(f"An exception occurred: {e}")
+
             video_capture = cv2.VideoCapture(temp_video_file.name)
             self.frames = []
             while True:

@@ -6,18 +6,39 @@ from src.video_composition.video.video_component import BaseVideoComponent
 
 class LoopingMP4(BaseVideoComponent):
     def __init__(self, mp4_path, start=0, width=1080, height=1920, fps=30, duration=None, reverse_loop=False, speed_factor=0.5, *args, **kwargs):
-        with tempfile.NamedTemporaryFile(suffix='.avi') as temp_video_file:
-            subprocess.call(['ffmpeg', '-y', '-i', mp4_path, '-vcodec', 'rawvideo', '-pix_fmt', 'bgr24', temp_video_file.name])
+        with tempfile.NamedTemporaryFile(suffix='.avi', delete=True) as temp_video_file:
+
+            command = ['ffmpeg', '-y', '-i', mp4_path, '-vcodec', 'libx264', '-pix_fmt', 'bgr24', temp_video_file.name]
+            print(f"Running looping command for {mp4_path}: {' '.join(command)}")
+
+            try:
+                subprocess.call(command)
+            except Exception as e:
+                print(f"An exception occurred: {e}")
+                raise e
+            
+            print("Finished running ffmpeg command")
+
             video_capture = cv2.VideoCapture(temp_video_file.name)
+            print(f"Video captured")
             self.frames = []
+            i = 0
             while True:
+                i += 1
+                if i % 100 == 0:
+                    print(f"Reading frame {i}")
                 ret, frame = video_capture.read()
                 if not ret:
                     break
                 self.frames.append(self.scale_frame(frame, width, height))
+            print(f"Finished reading frames")
             video_capture.release()
+            print(f"Video released")
             self.reverse_loop = reverse_loop
             self.speed_factor = speed_factor
+            print(f"Speed factor: {self.speed_factor}")
+            if duration is None:
+                duration = len(self.frames) / fps
             super().__init__(duration=duration, start_time=start, width=width, height=height, fps=fps)
 
     @staticmethod
@@ -65,3 +86,17 @@ class LoopingMP4(BaseVideoComponent):
 
         component_frame = self.frames[oscillating_frame_index]
         np.copyto(frame, component_frame)
+
+    def close(self):
+        self.frames = None
+
+
+    @staticmethod
+    def get_video_duration(video_path):
+        cap = cv2.VideoCapture(video_path)
+        fps = int(cap.get(cv2.CAP_PROP_FPS))
+        frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        duration = frame_count / fps
+        cap.release()
+        return duration
+

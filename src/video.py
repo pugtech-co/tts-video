@@ -59,9 +59,13 @@ class VideoCreator:
             # Handling the audio
             sf.write(temp_audio_file.name, audio_samples, audio_rate)
             command = ['ffmpeg', '-y', '-i', temp_video_file.name, '-i', temp_audio_file.name, '-c:v', 'copy', '-c:a', 'aac', '-strict', 'experimental', '-loglevel', 'error', output_file]
-            subprocess.run(command, check=True)
-            os.remove(temp_video_file.name)
-            os.remove(temp_audio_file.name)
+            try:
+                subprocess.run(command, check=True)
+            except Exception as e:
+                print(f"An exception occurred: {e}")
+            finally:
+                os.remove(temp_video_file.name)
+                os.remove(temp_audio_file.name)
 
     @staticmethod
     def _read_background_image(background_image_path):

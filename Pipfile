@@ -4,11 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+TTS = {git = "https://github.com/pugtech-co/TTS.git"}
+
 jupyter = "*"
-tts = {editable = true, path = "/Users/tindelllockett/projects/TTS"}
 moviepy = "*"
 opencv-python = "*"
 scipy = "*"
+setuptools = "*"
 
 [requires]
 python_version = "3.11"

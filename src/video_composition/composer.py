@@ -3,6 +3,7 @@ import cv2
 import soundfile as sf
 import tempfile
 import subprocess
+import os
 from src.video_composition.combo.component_container import ComponentContainer
 
 class VideoComposition(ComponentContainer):
@@ -21,7 +22,14 @@ class VideoComposition(ComponentContainer):
             self._create_audio_track(temp_audio_file.name)
 
             command = ['ffmpeg', '-y', '-i', temp_video_file.name, '-i', temp_audio_file.name, '-c:v', 'copy', '-c:a', 'aac', '-strict', 'experimental', '-loglevel', 'error', output_file]
-            subprocess.run(command, check=True)
+            print(f"Running composer command: {' '.join(command)}")
+            try:
+                subprocess.run(command, check=True)
+            except Exception as e:
+                print(f"An exception occurred: {e}")
+            finally:
+                os.remove(temp_video_file.name)
+                os.remove(temp_audio_file.name)
 
     def _create_video_frames(self, video_output_file):
         fourcc = cv2.VideoWriter_fourcc(*VideoComposition.VIDEO_CODEC)
