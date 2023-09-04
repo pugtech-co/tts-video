@@ -1,3 +1,4 @@
+[Jolene](notebooks/output/jolene.mp4)
 # Installation
 ## Requirements
 - Pipenv
@@ -18,4 +19,4 @@ see [src.tts](src/tts.py)
 ## Painting words on a video based on the generated audio
 see [src.video_composition.combo.tts_component](src/video_composition/combo/tts_component.py)
 ## Adding videos, background, and audio together
-see [notebooks](notebooks)
+see [notebooks.lyrics](notebooks/lyrics.ipynb)

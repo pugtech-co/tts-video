@@ -3,3 +3,4 @@
 *.mp4
 **/__pycache__/
 .vscode/
+!notebooks/output/jolene.mp4
