@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3f97e5afbd3c3cf1bbf4eb931568e92ae4d96e487c823ea2aa9dd90fdb0b0a1e"
+            "sha256": "fada2c7b81143b13c84ed0d8838dc110c480f9f15cfe8501309f53af63a60454"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1843,7 +1843,7 @@
                 "sha256:ecde0f8adef7dfdec993fd54b0f78183051b6580f606111a6d789cd14c61ea0c",
                 "sha256:f21c442fdd2805e91799fbe044a7b999b8571bb0ab0f7850d0cb9641a687092b"
             ],
-            "markers": "python_version >= '3.10'",
+            "markers": "python_version >= '3.11'",
             "version": "==1.24.3"
         },
         "oauthlib": {
@@ -1906,6 +1906,7 @@
                 "sha256:d99e678180bc59b0c9443314297bddce4ad35727a1a2656dbe585fd78710b3b9",
                 "sha256:eb20252720b1cc1b7d0b2879ffc7e0542dd568f24d7c4b2347cb035206936421"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.9'",
             "version": "==2.1.0"
         },
@@ -2224,10 +2225,10 @@
         },
         "pytz": {
             "hashes": [
-                "sha256:1d8ce29db189191fb55338ee6d0387d82ab59f3d00eac103412d64e0ebd0c588",
-                "sha256:a151b3abb88eda1d4e34a9814df37de2a80e301e68ba0fd856fb9b46bfbbbffb"
+                "sha256:7b4fddbeb94a1eba4b557da24f19fdf9db575192544270a9101d8509f9f43d7b",
+                "sha256:ce42d816b81b68506614c11e8937d3aa9e41007ceb50bfdcb0749b921bf646c7"
             ],
-            "version": "==2023.3"
+            "version": "==2023.3.post1"
         },
         "pywavelets": {
             "hashes": [
@@ -3260,11 +3261,11 @@
         },
         "transformers": {
             "hashes": [
-                "sha256:1edc8ae1de357d97c3d36b04412aa63d55e6fc0c4b39b419a7d380ed947d2252",
-                "sha256:b930d3dbd907a3f300cf49e54d63a56f8a0ab16b01a2c2a61ecff37c6de1da08"
+                "sha256:9e894dc62cfb02d92c1201e57219765b53be6486a306db8b60414e93fc2e39a5",
+                "sha256:c3b7f818e90c4361bb50ad541ab94e28329aa0d97a1c45ffafa5a8b693bc73ec"
             ],
             "markers": "python_full_version >= '3.8.0'",
-            "version": "==4.32.1"
+            "version": "==4.33.0"
         },
         "tts": {
             "git": "https://github.com/pugtech-co/TTS.git",

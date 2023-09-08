@@ -5,12 +5,12 @@ name = "pypi"
 
 [packages]
 TTS = {git = "https://github.com/pugtech-co/TTS.git"}
-
 jupyter = "*"
 moviepy = "*"
 opencv-python = "*"
 scipy = "*"
 setuptools = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.11"

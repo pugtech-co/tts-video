@@ -34,7 +34,7 @@ class TextToSpeech:
             
             if(speed != 1.0):
                 new_durations = output[1]['outputs']['durations'].clone() / speed
-                output = TextToSpeech.synthesizer.tts(text=sentence,speaker_name="p227",return_extra_outputs=True,durations=new_durations[0])
+                output = TextToSpeech.synthesizer.tts(text=sentence,speaker_name=speaker_name,return_extra_outputs=True,durations=new_durations[0])
 
             sentence_output = TTSOutput.from_output(output, sentence, TextToSpeech.synthesizer)
 
