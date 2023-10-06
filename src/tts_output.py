@@ -45,7 +45,7 @@ class TTSOutput:
         return pre_tokenized_text, phoneme_timestamps
     
     @staticmethod
-    def get_word_timestamps_and_indices(pre_tokenized_text, phoneme_timestamps):
+    def get_word_timestamps_and_indices(pre_tokenized_text, phoneme_timestamps):        
         word_indices = [0] + [i for i, phoneme in enumerate(pre_tokenized_text) if phoneme == ' ']
         word_timestamps=[float(phoneme_timestamps[space_idx]) for space_idx in word_indices]
         return word_timestamps, word_indices
