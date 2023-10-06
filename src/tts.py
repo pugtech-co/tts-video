@@ -41,16 +41,28 @@ class TextToSpeech:
             if(plt):
                 print(" ---- ")
                 print( "sentence: " + sentence)
-                sp = str(len(TextToSpeech.custom_split(sentence, len(sentence_output.word_indices))))
-                wi = str(len(sentence_output.word_indices))
-                sum_sp += int(sp)
-                sum_wi += int(wi)
-                print("split: " + sp + " word indices: " + wi)
+                words = str(len(TextToSpeech.custom_split(sentence, len(sentence_output.word_indices))))
+                timestamps = str(len(sentence_output.word_indices))
+                sum_sp += int(words)
+                sum_wi += int(timestamps)
+                print("split: " + words + " word indices: " + timestamps)
                 print("sum split: " + str(sum_sp) + " sum word indices: " + str(sum_wi))
-                if(sp != wi):
-                    print("split: " + sp + " word indices: " + wi)
+                if(words != timestamps):
+                    print("@@@@@@@@ failed ")
+                    print("split: " + words + " word indices: " + timestamps)
                     plt.figure()
                     TextToSpeech.plot_spectrogram_with_words(plt, TextToSpeech.add_beeps(sentence_output))
+                    print(" ---- ") 
+                    print("sentence: " + sentence)
+                    # print TextToSpeech.custom_split(sentence, len(sentence_output.word_indices))
+                    print("custom split: " + str(TextToSpeech.custom_split(sentence, len(sentence_output.word_indices))))
+                    # print sentence_output.word_indices
+                    print("word indices: " + str(sentence_output.word_indices))
+
+                    if(words > timestamps):
+                        raise IndexError("failed")
+                    else:
+                        print("failed but not raising error because words < timestamps, probably it is verse number, which will always be the last word to show anyway.")
 
             if combined_output is None:
                 combined_output = sentence_output
@@ -67,9 +79,13 @@ class TextToSpeech:
 
         common_fused_words = [
             'to be', 
+            'Do not',
+            'do not',
             'for the', 
+            'has been',
             'of the',
             'as the', 
+            'did not',
             'for an', 
             'have been', 
             "I shall", 
@@ -131,6 +147,7 @@ class TextToSpeech:
         return TTSOutput(audio=audio_samples, pre_tokenized_text=audio_output.pre_tokenized_text, phoneme_timestamps=audio_output.phoneme_timestamps, total_running_time_s=audio_output.total_running_time_s, word_timestamps=audio_output.word_timestamps, word_indices=audio_output.word_indices)
 
 # Paths and Parameters
+# TODO use pyenv to set these paths
 tts_path = "/Users/tindelllockett/Library/Application Support/tts/tts_models--en--vctk--vits/model_file.pth"
 tts_config_path = "/Users/tindelllockett/Library/Application Support/tts/tts_models--en--vctk--vits/config.json"
 speakers_file_path = "/Users/tindelllockett/Library/Application Support/tts/tts_models--en--vctk--vits/speaker_ids.json"

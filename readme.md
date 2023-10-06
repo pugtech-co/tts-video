@@ -4,6 +4,7 @@ notebooks/output/jolene.mp4
 - Pipenv
 - brew install espeak
 - brew install ffmpeg
+- a bunch of mp4's in `notebooks/videos/`
 
 ## Setup
 1. Clone this repository
