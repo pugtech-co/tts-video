@@ -11,11 +11,10 @@ class TimedTextComponent(BaseVideoComponent):
         self.font_scale = font_scale
         self.font_thickness = font_thickness
         self.color = color
-        self.current_word_idx = 0
-        
+        self.current_word_idx = 0        
 
     def apply(self, frame):
-        if self.current_word_idx < len(self.words) - 1 and self.current_frame >= self.timestamps[self.current_word_idx + 1]:
+        if self.current_word_idx + 1 < len(self.timestamps) and self.current_word_idx < len(self.words) - 1 and self.current_frame >= self.timestamps[self.current_word_idx + 1]:
             self.current_word_idx += 1
 
         word = self.words[self.current_word_idx]

@@ -6,6 +6,8 @@ from src.video_composition.video.video_component import BaseVideoComponent
 
 class LoopingMP4(BaseVideoComponent):
     def __init__(self, mp4_path, start=0, width=1080, height=1920, fps=30, duration=None, reverse_loop=False, speed_factor=0.5, *args, **kwargs):
+        print(f"Initializing LoopingMP4 with mp4_path={mp4_path}, start={start}, width={width}, height={height}, fps={fps}, duration={duration}, reverse_loop={reverse_loop}, speed_factor={speed_factor}")
+        
         with tempfile.NamedTemporaryFile(suffix='.avi', delete=True) as temp_video_file:
 
             command = ['ffmpeg', '-y', '-i', mp4_path, '-vcodec', 'libx264', '-pix_fmt', 'bgr24', temp_video_file.name]
@@ -20,6 +22,11 @@ class LoopingMP4(BaseVideoComponent):
             print("Finished running ffmpeg command")
 
             video_capture = cv2.VideoCapture(temp_video_file.name)
+            original_fps = int(video_capture.get(cv2.CAP_PROP_FPS))
+
+            speed_factor = speed_factor * (original_fps/fps)
+            print(f"\n\nUpdated Speed factor: {speed_factor}\n\n")
+
             print(f"Video captured")
             self.frames = []
             i = 0
@@ -72,6 +79,9 @@ class LoopingMP4(BaseVideoComponent):
         total_frames = len(self.frames)
 
         adjusted_current_frame = int((self.current_frame - self.start_frame) * self.speed_factor)
+
+        if(self.current_frame%100 == 0):
+            print(f"Current frame: {self.current_frame}, adjusted current frame: {adjusted_current_frame}, total frames: {total_frames}")
 
         if self.reverse_loop:
             # Forward and backward loop: 0, 1, 2, ..., n, n-1, ..., 2, 1

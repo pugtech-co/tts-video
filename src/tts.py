@@ -50,48 +50,48 @@ class TextToSpeech:
                 output, sentence, TextToSpeech.synthesizer
             )
 
-            if plt:
+            print(" ---- ")
+            print("sentence: " + sentence)
+            words = str(
+                len(
+                    TextToSpeech.custom_split(
+                        sentence, len(sentence_output.word_indices)
+                    )
+                )
+            )
+            timestamps = str(len(sentence_output.word_indices))
+            sum_sp += int(words)
+            sum_wi += int(timestamps)
+            print("split: " + words + " word indices: " + timestamps)
+            print("sum split: " + str(sum_sp) + " sum word indices: " + str(sum_wi))
+            if words != timestamps:
+                print("@@@@@@@@ failed ")
+                print("split: " + words + " word indices: " + timestamps)
+                if plt:
+                    plt.figure()
+                    TextToSpeech.plot_spectrogram_with_words(
+                        plt, TextToSpeech.add_beeps(sentence_output)
+                    )
                 print(" ---- ")
                 print("sentence: " + sentence)
-                words = str(
-                    len(
+                # print TextToSpeech.custom_split(sentence, len(sentence_output.word_indices))
+                print(
+                    "custom split: "
+                    + str(
                         TextToSpeech.custom_split(
                             sentence, len(sentence_output.word_indices)
                         )
                     )
                 )
-                timestamps = str(len(sentence_output.word_indices))
-                sum_sp += int(words)
-                sum_wi += int(timestamps)
-                print("split: " + words + " word indices: " + timestamps)
-                print("sum split: " + str(sum_sp) + " sum word indices: " + str(sum_wi))
-                if words != timestamps:
-                    print("@@@@@@@@ failed ")
-                    print("split: " + words + " word indices: " + timestamps)
-                    plt.figure()
-                    TextToSpeech.plot_spectrogram_with_words(
-                        plt, TextToSpeech.add_beeps(sentence_output)
-                    )
-                    print(" ---- ")
-                    print("sentence: " + sentence)
-                    # print TextToSpeech.custom_split(sentence, len(sentence_output.word_indices))
-                    print(
-                        "custom split: "
-                        + str(
-                            TextToSpeech.custom_split(
-                                sentence, len(sentence_output.word_indices)
-                            )
-                        )
-                    )
-                    # print sentence_output.word_indices
-                    print("word indices: " + str(sentence_output.word_indices))
+                # print sentence_output.word_indices
+                print("word indices: " + str(sentence_output.word_indices))
 
-                    if words > timestamps:
-                        raise IndexError("failed")
-                    else:
-                        print(
-                            "failed but not raising error because words < timestamps, probably it is verse number, which will always be the last word to show anyway."
-                        )
+                if words > timestamps:
+                    raise IndexError("failed")
+                else:
+                    print(
+                        "failed but not raising error because words < timestamps, probably it is verse number, which will always be the last word to show anyway."
+                    )
 
             if combined_output is None:
                 combined_output = sentence_output
