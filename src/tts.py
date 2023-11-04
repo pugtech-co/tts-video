@@ -129,6 +129,9 @@ class TextToSpeech:
             "I shall",
             "in the",
             "of events",
+            # "but I",
+            #"I will",
+            "no one",
         ]
         common_fused_words_regex = [
             r"\b" + re.escape(word) + r"\b" for word in common_fused_words
@@ -200,9 +203,9 @@ class TextToSpeech:
 
 # Paths and Parameters
 # TODO use pyenv to set these paths
-tts_path = "/Users/tindelllockett/Library/Application Support/tts/tts_models--en--vctk--vits/model_file.pth"
-tts_config_path = "/Users/tindelllockett/Library/Application Support/tts/tts_models--en--vctk--vits/config.json"
-speakers_file_path = "/Users/tindelllockett/Library/Application Support/tts/tts_models--en--vctk--vits/speaker_ids.json"
+tts_path = "/Users/ben/Library/Application Support/tts/tts_models--en--vctk--vits/model_file.pth"
+tts_config_path = "/Users/ben/Library/Application Support/tts/tts_models--en--vctk--vits/config.json"
+speakers_file_path = "/Users/ben/Library/Application Support/tts/tts_models--en--vctk--vits/speaker_ids.json"
 text = "hello world; this is an example sentence"
 
 # Initialization and execution
